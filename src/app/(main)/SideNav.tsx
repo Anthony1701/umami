@@ -2,7 +2,7 @@ import { AdminNav } from '@/app/(main)/admin/AdminNav';
 import { SettingsNav } from '@/app/(main)/settings/SettingsNav';
 import { WebsiteNav } from '@/app/(main)/websites/[websiteId]/WebsiteNav';
 import { IconLabel } from '@/components/common/IconLabel';
-import { useGlobalState, useMessages, useNavigation } from '@/components/hooks';
+import { useConfig, useGlobalState, useMessages, useNavigation } from '@/components/hooks';
 import {
   Globe,
   Grid2x2,
@@ -28,6 +28,7 @@ import Link from '@/components/common/Link';
 
 export function SideNav(props: any) {
   const { t, labels } = useMessages();
+  const config = useConfig();
   const { pathname, renderUrl, websiteId, teamId } = useNavigation();
   const [isCollapsed] = useGlobalState('sidenav-collapsed', false);
 
@@ -92,9 +93,15 @@ export function SideNav(props: any) {
       >
         <Row paddingX="3" alignItems="center" justifyContent="space-between" flexGrow="1">
           {!isCollapsed && (
-            <IconLabel icon={<Logo />}>
-              <Text weight="bold">umami</Text>
-            </IconLabel>
+            config?.logoUrl ? (
+              <Row alignItems="center" gap>
+                <img src={config.logoUrl} alt={config.appName || 'umami'} style={{ height: 24 }} />
+              </Row>
+            ) : (
+              <IconLabel icon={<Logo />}>
+                <Text weight="bold">{config?.appName || 'umami'}</Text>
+              </IconLabel>
+            )
           )}
           <PanelButton />
         </Row>

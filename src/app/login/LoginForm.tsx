@@ -10,13 +10,14 @@ import {
   TextField,
 } from '@umami/react-zen';
 import { useRouter } from 'next/navigation';
-import { useMessages, useUpdateQuery } from '@/components/hooks';
+import { useConfig, useMessages, useUpdateQuery } from '@/components/hooks';
 import { Logo } from '@/components/svg';
 import { setClientAuthToken } from '@/lib/client';
 import { setUser } from '@/store/app';
 
 export function LoginForm() {
   const { t, labels, getErrorMessage } = useMessages();
+  const config = useConfig();
   const router = useRouter();
   const { mutateAsync, error } = useUpdateQuery('/auth/login');
 
@@ -32,10 +33,14 @@ export function LoginForm() {
 
   return (
     <Column justifyContent="center" alignItems="center" gap="6">
-      <Icon size="lg">
-        <Logo />
-      </Icon>
-      <Heading>umami</Heading>
+      {config?.logoUrl ? (
+        <img src={config.logoUrl} alt={config.appName || 'umami'} style={{ height: 40 }} />
+      ) : (
+        <Icon size="lg">
+          <Logo />
+        </Icon>
+      )}
+      <Heading>{config?.appName || 'umami'}</Heading>
       <Form onSubmit={handleSubmit} error={getErrorMessage(error)} style={{ minWidth: 300 }}>
         <FormField
           label={t(labels.username)}

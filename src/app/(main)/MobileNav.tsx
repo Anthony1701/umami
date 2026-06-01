@@ -2,7 +2,7 @@ import { Column, Grid, Row, Text } from '@umami/react-zen';
 import Link from '@/components/common/Link';
 import { WebsiteNav } from '@/app/(main)/websites/[websiteId]/WebsiteNav';
 import { IconLabel } from '@/components/common/IconLabel';
-import { useMessages, useNavigation } from '@/components/hooks';
+import { useConfig, useMessages, useNavigation } from '@/components/hooks';
 import { Globe, Grid2x2, LayoutDashboard, LinkIcon } from '@/components/icons';
 import { MobileMenuButton } from '@/components/input/MobileMenuButton';
 import { UserButton } from '@/components/input/UserButton';
@@ -12,6 +12,7 @@ import { SettingsNav } from './settings/SettingsNav';
 
 export function MobileNav() {
   const { t, labels } = useMessages();
+  const config = useConfig();
   const { pathname, websiteId, renderUrl } = useNavigation();
   const isAdmin = pathname.includes('/admin');
   const isSettings = pathname.includes('/settings');
@@ -77,9 +78,13 @@ export function MobileNav() {
         }}
       </MobileMenuButton>
       <Row alignItems="center" justifyContent="center" flexGrow={1}>
-        <IconLabel icon={<Logo />} style={{ width: 'auto' }}>
-          <Text weight="bold">umami</Text>
-        </IconLabel>
+        {config?.logoUrl ? (
+          <img src={config.logoUrl} alt={config.appName || 'umami'} style={{ height: 24 }} />
+        ) : (
+          <IconLabel icon={<Logo />} style={{ width: 'auto' }}>
+            <Text weight="bold">{config?.appName || 'umami'}</Text>
+          </IconLabel>
+        )}
       </Row>
     </Grid>
   );
